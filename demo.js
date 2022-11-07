@@ -184,5 +184,5 @@ const controllerRecord = (id, props) => {
 const exportCSVbyId = (id, data) => {
   let v = transferArray(data);
   let fileName = 'Controller ' + id + ' ' + new Date();
-  downloadCSV(v, fileName);
+  downloadRecordFile(v, fileName, 'txt');
 }

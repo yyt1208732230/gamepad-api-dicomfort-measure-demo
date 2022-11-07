@@ -14,14 +14,14 @@ const transferArray = (array) => {
 // const csv = test_array.map(row => row.map(item => (typeof item === 'string' && item.indexOf(',') >= 0) ? `"${item}"` : String(item)).join(',')).join('\n');
 
 // Download CSV
-const downloadCSV = (array, fileName = null) => {
+const downloadRecordFile = (array, fileName = null, type = 'txt') => {
     // Format the CSV string
     let data = encodeURI('data:text/csv;charset=utf-8,' + array);
 
     // Create a virtual Anchor tag
     const link = document.createElement('a');
     link.setAttribute('href', data);
-    link.setAttribute('download', fileName + '.txt');
+    link.setAttribute('download', fileName + '.' + type);
 
     // Append the Anchor tag in the actual web page or application
     document.body.appendChild(link);
