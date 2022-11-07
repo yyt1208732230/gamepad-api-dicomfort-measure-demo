@@ -1,3 +1,4 @@
+//  Init record function states
 var recordStates = {
   ctrl1: false,
   ctrl2: false,
@@ -41,13 +42,18 @@ var ctrlMapping = {
   'ctrl4': null,
 }
 
-// Target button events filter
+// Target button events filter (format output)
+var ctrl_last_RT_state = [{pressed: false, value: 0}];
 const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
   let values = 0.00000;
   let _id = parseInt(id);
   if (targetButton === 'RT') {
-    let btnState = gamepads[_id-1].buttons[7]
-    values = [btnState ? btnState.value : 0];
+    let btnState = gamepads[_id-1].buttons[7];
+    let ctrlTimestamp = gamepads[_id-1].timestamp;
+    let pValue = (btnState.value == 0 && btnState.pressed) ? ctrl_last_RT_state[_id-1].value : btnState.value;
+    values = [ctrlTimestamp, btnState ? pValue : 0];
+    ctrl_last_RT_state[_id-1].pressed = btnState.pressed;
+    ctrl_last_RT_state[_id-1].value = btnState.value;
   }
 
   return [new Date(), Date.now(), ...values];
