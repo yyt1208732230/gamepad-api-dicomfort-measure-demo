@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gamepad API Demo</title>
+  <script src="./jquery-3.6.1.min.js"></script>
   <script src="./demo.js"></script>
   <style>
     * { font-family: monospace; }
@@ -12,7 +13,11 @@
   </style>
 </head>
 <body>
-  <h1>logs</h1>
+  <h1>Discomfort Objective Measure (Controller Version 1.0)</h1>
+  <button onclick="controllerRecord('1')"><li>Controller 1</li><li id="btn_r1">Start Record</li></button>
+  <button onclick="controllerRecord('2')"><li>Controller 2</li><li id="btn_r2">Start Record</li></button>
+  <button onclick="controllerRecord('3')"><li>Controller 3</li><li id="btn_r3">Start Record</li></button>
+  <button onclick="controllerRecord('4')"><li>Controller 4</li><li id="btn_r4">Start Record</li></button>
   <ul id="logs"></ul>
 </body>
 </html>

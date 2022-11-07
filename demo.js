@@ -1,3 +1,47 @@
+var recordStates = {
+  ctrl1: false,
+  ctrl2: false,
+  ctrl3: false,
+  ctrl4: false,
+};
+
+var recordFolder1 = {
+  id: '1',
+  events: [],
+  discomfortEvents_L: [],
+  discomfortEvents_R: [],
+};
+
+var recordFolder2 = {
+  id: '2',
+  events: [],
+  discomfortEvents_L: [],
+  discomfortEvents_R: [],
+};
+
+var recordFolder3 = {
+  id: '3',
+  events: [],
+  discomfortEvents_L: [],
+  discomfortEvents_R: [],
+};
+
+var recordFolder4 = {
+  id: '4',
+  events: [],
+  discomfortEvents_L: [],
+  discomfortEvents_R: [],
+};
+
+// Map controller with gamepad id
+var ctrlMapping = {
+  'ctrl1': 'Xbox 360 Controller (XInput STANDARD GAMEPAD)',
+  'ctrl2': null,
+  'ctrl3': null,
+  'ctrl4': null,
+}
+
+// Gamepad Basic APIs
 document.addEventListener('DOMContentLoaded', () => {
   // logger
   const logsContainer = document.querySelector('#logs');
@@ -16,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (before.buttons.length != after.buttons.length) { return false; }
     for (let i = 0; i < before.buttons.length; i++) {
       beforeButton = before.buttons[i];
-      afterButton  = after.buttons[i];
+      afterButton = after.buttons[i];
       if (beforeButton.pressed != afterButton.pressed || beforeButton.value != afterButton.value) {
         return false;
       }
@@ -25,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (before.axes.length != after.axes.length) { return false; }
     for (let i = 0; i < before.axes.length; i++) {
       beforeAxes = before.axes[i];
-      afterAxes  = after.axes[i];
+      afterAxes = after.axes[i];
       if (beforeAxes != afterAxes) {
         return false;
       }
@@ -34,27 +78,37 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   };
 
+  // gamepad states checks
   const updateGamepadState = () => {
     const gamepads = navigator.getGamepads();
     for (i in gamepads) {
       const gamepad = gamepads[i];
-      const nextState = {
-        id: gamepad.id,
-        buttons: [],
-        axes: [],
-      };
-      gamepad.buttons.forEach(e => nextState.buttons.push({ pressed: e.pressed, value: e.value }));
-      gamepad.axes.forEach(e => nextState.axes.push(e));
+      if (gamepad) {
+        const nextState = {
+          id: gamepad.id,
+          timestamp: gamepad.timestamp,
+          buttons: [],
+          axes: [],
+        };
+        gamepad.buttons.forEach(e => nextState.buttons.push({ pressed: e.pressed, value: e.value }));
+        gamepad.axes.forEach(e => nextState.axes.push(e));
 
-      if (!deepEqual(controller[i], nextState)) {
-        controller[i] = nextState;
-        logger(JSON.stringify(nextState));
+        if (!deepEqual(controller[i], nextState)) {
+          controller[i] = nextState;
+          logger(JSON.stringify(nextState));
+        }
       }
     }
-
-    const haveActivePads = gamepads.filter(g => g.connected).length > 0;
-    if (haveActivePads) {
-      window.requestAnimationFrame(updateGamepadState);
+    if (gamepads) {
+      const haveActivePads = gamepads.filter(g => g && g.connected).length > 0;
+      if (haveActivePads) {
+        // test
+        if(recordStates.ctrl1) {
+          recordFolder1.events.push(gamepads);
+          console.log(gamepads);
+        }
+        window.requestAnimationFrame(updateGamepadState);
+      }
     }
   };
 
@@ -73,3 +127,43 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener("gamepadconnected", connectHandler);
   window.addEventListener("gamepaddisconnected", disconnectHandler);
 });
+
+// Recording button toggles
+const updateBtnText = (tagId, newText) => {
+  $('#' + tagId).text(newText)
+}
+
+const updateControllerRecordState = (tagId, newText) => {
+  $('#' + tagId).text(newText)
+}
+
+// Recording handlers
+const startRecord = (id, state) => {
+  if (!recordStates['ctrl' + id]) {
+    recordStates['ctrl' + id] = true;
+  }
+  updateBtnText('btn_r' + id, 'End Record');
+  console.log('Start Record Controller Id - ' + id);
+}
+
+const EndRecord = (id, state) => {
+  if (recordStates['ctrl' + id]) {
+    recordStates['ctrl' + id] = false;
+  }
+  // test
+  if(id === '1') {
+    console.log(recordFolder1.events);
+  }
+  updateBtnText('btn_r' + id, 'Start Record');
+  console.log('End Record Controller Id - ' + id);
+}
+
+const controllerRecord = (id, props) => {
+  if (!recordStates['ctrl' + id]) {
+    startRecord(id, null);
+  } else {
+    EndRecord(id, null);
+  }
+}
+
+// Controllers data files export
