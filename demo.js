@@ -41,6 +41,18 @@ var ctrlMapping = {
   'ctrl4': null,
 }
 
+// Target button events filter
+const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
+  let values = 0.00000;
+  let _id = parseInt(id);
+  if (targetButton === 'RT') {
+    let btnState = gamepads[_id-1].buttons[7]
+    values = [btnState ? btnState.value : 0];
+  }
+
+  return [new Date(), Date.now(), ...values];
+}
+
 // Gamepad Basic APIs
 document.addEventListener('DOMContentLoaded', () => {
   // logger
@@ -104,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (haveActivePads) {
         // test
         if(recordStates.ctrl1) {
-          recordFolder1.events.push(gamepads);
+          let RTvalue = eventFilter('1', gamepads, 'RT')
+          recordFolder1.events.push(RTvalue);
           console.log(gamepads);
         }
         window.requestAnimationFrame(updateGamepadState);
@@ -153,6 +166,7 @@ const EndRecord = (id, state) => {
   // test
   if(id === '1') {
     console.log(recordFolder1.events);
+    exportCSVbyId('1', recordFolder1.events);
   }
   updateBtnText('btn_r' + id, 'Start Record');
   console.log('End Record Controller Id - ' + id);
@@ -167,3 +181,8 @@ const controllerRecord = (id, props) => {
 }
 
 // Controllers data files export
+const exportCSVbyId = (id, data) => {
+  let v = transferArray(data);
+  let fileName = 'Controller ' + id + ' ' + new Date();
+  downloadCSV(v, fileName);
+}
