@@ -23,10 +23,10 @@ R script: `controller_discomfort_visualization.r`
 - ctrl_timestamp: the timestamp returned from the controller
 - discomfort: the press value returned from the controller
 
-
-
-![](https://github.com/yyt1208732230/gamepad-api-dicomfort-measure-demo/blob/discomfort_demo_v1/discomfort_visualization_demo_1.png)
+![](https://github.com/yyt1208732230/gamepad-api-dicomfort-measure-demo/blob/discomfort_demo_v1/btn_logs.png)
 
 ![](https://github.com/yyt1208732230/gamepad-api-dicomfort-measure-demo/blob/discomfort_demo_v1/fingerPress.png)
+
+![](https://github.com/yyt1208732230/gamepad-api-dicomfort-measure-demo/blob/discomfort_demo_v1/discomfort_visualization_demo_1.png)
 
 #### Keep updating...
