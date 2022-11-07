@@ -23,7 +23,7 @@ cotroller1.df[c('standard_time', 'timestamp', 'ctrl_timestamp', 'discomfort')] <
 # time_start <- (cotroller1.df$timestamp)[1]
 
 # mutate & recreate x-axis for time(second)
-# cotroller1.df <- mutate(cotroller1.df, timestamp_s = as.POSIXct(standard_time, format="%d/%m/%Y %H:%M", tz=Sys.timezone()))
+cotroller1.df <- mutate(cotroller1.df, timestamp_s = as.POSIXct(standard_time, format="%d/%m/%Y %H:%M", tz=Sys.timezone()))
 
 #formate value
 cotroller1.df <- mutate(cotroller1.df, discomfort_s = as.double(discomfort))

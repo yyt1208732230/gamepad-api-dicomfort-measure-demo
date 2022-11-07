@@ -35,15 +35,21 @@ var recordFolder4 = {
 };
 
 // Map controller with gamepad id
-var ctrlMapping = {
-  'ctrl1': 'Xbox 360 Controller (XInput STANDARD GAMEPAD)',
-  'ctrl2': null,
-  'ctrl3': null,
-  'ctrl4': null,
-}
+// var ctrlMapping = {
+//   'ctrl1': 'Xbox 360 Controller (XInput STANDARD GAMEPAD)',
+//   'ctrl2': null,
+//   'ctrl3': null,
+//   'ctrl4': null,
+// }
 
 // Target button events filter (format output)
-var ctrl_last_RT_state = [{pressed: false, value: 0}];
+var ctrl_last_RT_state = [
+  {pressed: false, value: 0},
+  {pressed: false, value: 0},
+  {pressed: false, value: 0},
+  {pressed: false, value: 0},
+];
+
 const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
   let values = 0.00000;
   let _id = parseInt(id);
@@ -63,10 +69,15 @@ const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
 document.addEventListener('DOMContentLoaded', () => {
   // logger
   const logsContainer = document.querySelector('#logs');
-  const logger = (text) => {
+  const logger = (text, name=null) => {
     const li = document.createElement('li');
+    const a = document.createElement("h4", { color: "#1A58AB" });
+    if(name) {
+      a.textContent = name;
+    }
     li.textContent = `[${(new Date).toISOString()}] ${text}`;
     logsContainer.prepend(li);
+    logsContainer.prepend(a);
   };
 
   // handle gamepad events
@@ -113,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!deepEqual(controller[i], nextState)) {
           controller[i] = nextState;
-          logger(JSON.stringify(nextState));
+          logger(JSON.stringify(nextState), `Controller ` + (parseInt(i)+1) + ` `);
         }
       }
     }
@@ -124,7 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if(recordStates.ctrl1) {
           let RTvalue = eventFilter('1', gamepads, 'RT')
           recordFolder1.events.push(RTvalue);
-          console.log(gamepads);
+          // console.log(gamepads);
+        }
+        if(recordStates.ctrl2) {
+          let RTvalue = eventFilter('2', gamepads, 'RT')
+          recordFolder2.events.push(RTvalue);
+          // console.log(gamepads);
+        }
+        if(recordStates.ctrl3) {
+          let RTvalue = eventFilter('3', gamepads, 'RT')
+          recordFolder3.events.push(RTvalue);
+          // console.log(gamepads);
+        }
+        if(recordStates.ctrl4) {
+          let RTvalue = eventFilter('4', gamepads, 'RT')
+          recordFolder4.events.push(RTvalue);
+          // console.log(gamepads);
         }
         window.requestAnimationFrame(updateGamepadState);
       }
@@ -173,6 +199,18 @@ const EndRecord = (id, state) => {
   if(id === '1') {
     console.log(recordFolder1.events);
     exportCSVbyId('1', recordFolder1.events);
+  }
+  if(id === '2') {
+    console.log(recordFolder2.events);
+    exportCSVbyId('2', recordFolder2.events);
+  }
+  if(id === '3') {
+    console.log(recordFolder3.events);
+    exportCSVbyId('3', recordFolder3.events);
+  }
+  if(id === '4') {
+    console.log(recordFolder4.events);
+    exportCSVbyId('4', recordFolder4.events);
   }
   updateBtnText('btn_r' + id, 'Start Record');
   console.log('End Record Controller Id - ' + id);
