@@ -50,6 +50,24 @@ var ctrl_last_RT_state = [
   {pressed: false, value: 0},
 ];
 
+const getNowFormatDate = () => {
+  let date = new Date();
+  let seperator1 = "-";
+  let seperator2 = ":";
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+  if (month >= 1 && month <= 9) {
+      month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+      strDate = "0" + strDate;
+  }
+  let currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+          + " " + date.getHours() + seperator2 + date.getMinutes()
+          + seperator2 + date.getSeconds();
+  return currentdate;
+}
+
 const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
   let values = 0.00000;
   let _id = parseInt(id);
@@ -62,7 +80,7 @@ const eventFilter = (id, gamepads, targetButton, targetId=null, props=null) => {
     ctrl_last_RT_state[_id-1].value = btnState.value;
   }
 
-  return [new Date(), Date.now(), ...values];
+  return [getNowFormatDate(), new Date(), Date.now(), ...values];
 }
 
 // Gamepad Basic APIs
